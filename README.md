@@ -1,6 +1,8 @@
 # Chit Chat
 Chit Chat is server-less chat with solutions that has been created to give you maximum of privacy. By server-less I mean that almost no data are transmitted through server - no messages, no profiles data etc. Also, it has encryption that makes it all even more safer!
 
+[Click here to check server side of project](https://github.com/KongoPL/Chit-Chat-Server)
+
 # Stack:
 - [Angular ♥](https://angular.io/) (v 6.0.8)
 - [Socket.IO](https://socket.io/)
@@ -16,6 +18,9 @@ Chit Chat is server-less chat with solutions that has been created to give you m
 1. Big binary number calculator
 2. Own way to transfer data as raw binary, transmit it and decode (in JS it's little bit tricky to do it)
 3. Markdown formatting
+
+## Contact
+* Email: **kongocode@gmail.com**
 
 # Screenshots
 ![Main page](/screenshots/screenshot-1.jpg?raw=true "Main page")
