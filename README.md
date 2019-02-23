@@ -13,7 +13,7 @@ Chit Chat is server-less chat with solutions that has been created to give you m
 - All that written in [TypeScript](https://www.typescriptlang.org/)
 
 # Goals of project
-1. Transmit as few as possible data to server and create chat
+1. Transmit as few data as possible to server and create chat
 2. Encrypt data on your own
 
 ## Additional things I learned/did
