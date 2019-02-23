@@ -1,0 +1,24 @@
+@import './vendor/materialize/sass/materialize.scss';
+
+body
+{
+	background: #202020;
+
+	color: #e0e0e0;
+}
+
+.modal
+{
+	color: initial;
+}
+
+textarea
+{
+	color: #e0e0e0;
+}
+
+.top-nav
+{
+	background: transparent;
+	box-shadow: none;
+}

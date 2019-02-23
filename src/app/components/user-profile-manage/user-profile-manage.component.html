@@ -1,0 +1,19 @@
+<div id="user-profile-manage" class="modal">
+	 <div class="modal-content">
+		 <h4>Manage your profile</h4>
+		 <br />
+		 <form>
+			 <div class="input-field">
+			 	<a (click)="triggerAvatarInput()" class="prefix"><img src="{{avatar}}" class="avatar" onerror="this.src = environment.user.defaultAvatar" /></a>
+			 	<input id="name" [(ngModel)]="name" name="name" type="text">
+			 	<label for="name">User name</label>
+			 </div>
+			 <input type="file" #avatarInput id="avatar-input" class="avatar-input" (change)="changeAvatar()" />
+		 </form>
+	 </div>
+	<div class="modal-footer">
+		<a class="modal-close btn btn-waves btn-flat transparent">Close</a>
+		&nbsp;
+		<a (click)="saveSettings()" class="modal-close btn btn-waves">Save</a>
+	</div>
+</div>

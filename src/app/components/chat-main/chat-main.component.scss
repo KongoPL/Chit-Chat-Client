@@ -1,0 +1,76 @@
+.chat
+{
+	width: 100%;
+
+	padding: 10px;
+
+	border: 2px solid #ffffff;
+	border-radius: 10px;
+
+	.messages-window
+	{
+		height: 50vh;
+
+		padding: 0px 10px;
+
+		overflow-y: auto;
+
+		.message-block:not(:last-of-type)
+		{
+			margin-bottom: 10px;
+		}
+
+		.message-block .avatar
+		{
+			width: 45px;
+			height: 45px;
+
+			float: left;
+
+			border-radius: 5px;
+
+			object-fit: cover;
+		}
+
+		.message-block .content
+		{
+			margin-left: 55px;
+		}
+	}
+
+	form.write-message
+	{
+		display: flex;
+
+		.input-field
+		{
+			width: 100%;
+		}
+	}
+}
+
+.users-list
+{
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+
+	.user
+	{
+		margin: 5px 0px;
+	}
+
+	.user *
+	{
+		display: inline-block;
+		vertical-align: middle;
+	}
+
+	.user img
+	{
+		width: 45px;
+		height: 45px;
+
+		object-fit: cover;
+		border-radius: 5px;
+	}
+}

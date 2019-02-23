@@ -1,0 +1,47 @@
+<div id="markdown-info" class="modal">
+	<div class="modal-content">
+		<h4>Chatting cheat sheet</h4>
+		<table>
+			<thead>
+				<tr>
+					<th>Text</th>
+					<th>Result</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td>**text**</td>
+					<td [innerHTML]="'**text**' | chatMessage"></td>
+				</tr>
+				<tr>
+					<td>_text_</td>
+					<td [innerHTML]="'_text_' | chatMessage"></td>
+				</tr>
+				<tr>
+					<td>--text-- or ~~text~~</td>
+					<td [innerHTML]="'--text--' | chatMessage"></td>
+				</tr>
+				<tr>
+					<td>`code`</td>
+					<td [innerHTML]="'`code`' | chatMessage"></td>
+				</tr>
+				<tr>
+					<td>
+						```<br />
+						Multiple<br />
+						lines of code<br />
+						```
+					</td>
+					<td [innerHTML]="'```Multiple\nlines of code```' | chatMessage"></td>
+				</tr>
+				<tr>
+					<td>---</td>
+					<td><i>(horizontal split line)</i></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div class="modal-footer">
+		<a class="modal-close btn btn-waves">Close</a>
+	</div>
+</div>
