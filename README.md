@@ -1,6 +1,7 @@
 # Chit Chat
 Chit Chat is server-less chat with solutions that has been created to give you maximum of privacy. By server-less I mean that almost no data are transmitted through server - no messages, no profiles data etc. Also, it has encryption that makes it all even more safer!
 
+[Click here to read how this works "in-depth"](/docs/HowItWorks.md)
 [Click here to check server side of project](https://github.com/KongoPL/Chit-Chat-Server)
 
 # Stack:
