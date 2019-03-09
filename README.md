@@ -12,6 +12,19 @@ Chit Chat is server-less chat with solutions that has been created to give you m
 - [Materialize CSS](https://materializecss.com/)
 - All that written in [TypeScript](https://www.typescriptlang.org/)
 
+# Installation
+1. Download [NodeJS](https://nodejs.org/en/), [Angular](https://angular.io/cli) and [Typescript](https://www.typescriptlang.org/#download-links)
+2. Download server and client
+3. Go to client folder and open cmd in that catalog
+4. `npm install`
+5. Do the same with server
+6. Go to "bin" folder in server
+7. run `compile.bat`
+8. run `run-server.bat` (make sure that ports 4321 and 4322 are free)
+9. go to client directory
+10. run `ng build` in cmd (you can also run `ng serve` and preview website at 127.0.0.1:4200)
+11. If you builded application, you will find it at `./dist/chit-chat` there is builded application, ready to use. Just upload it to web server and give it a try.
+
 # Goals of project
 1. Transmit as few data to server as possible and create chat
 2. Encrypt data on your own
