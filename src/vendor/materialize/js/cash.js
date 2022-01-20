@@ -672,7 +672,7 @@
         }
       });
 
-      return query.substr(1);
+      return query.slice(1);
     },
 
     val: function (value) {

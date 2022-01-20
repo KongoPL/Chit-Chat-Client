@@ -678,7 +678,7 @@
         Math.random()
           .toString(36)
           .replace(/[^a-z]+/g, '')
-          .substr(0, 2);
+          .slice(0, 2);
 
       for (let c = 0; c < 1; c++) {
         this._renderDateDisplay();

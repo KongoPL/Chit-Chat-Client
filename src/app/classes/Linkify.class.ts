@@ -48,9 +48,9 @@ export default class Linkify
 		{
 			let link = linkMatches[0];
 
-			processedText += text.substr( 0, linkMatches.index ) + this.parser( link );
+			processedText += text.slice( 0, linkMatches.index ) + this.parser( link );
 
-			text = text.substr( (linkMatches.index ?? 0) + link.length );
+			text = text.slice( (linkMatches.index ?? 0) + link.length );
 		}
 
 		processedText += text;

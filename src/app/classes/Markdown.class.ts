@@ -81,7 +81,7 @@ export default class MarkDownParser
 				return textBefore +
 					markdownHtmlTags[0] +
 					markdownHtmlTags[1] +
-					this.parseTextInternal( parsingCode.substr( markdownTag.length ), findMarkdownTagRegex, nestingLevel );
+					this.parseTextInternal( parsingCode.slice( markdownTag.length ), findMarkdownTagRegex, nestingLevel );
 			}
 			else
 			{
@@ -118,7 +118,7 @@ export default class MarkDownParser
 		// Tag found, but shouldn't be parsed (no closing tag, multiline or anything else)
 		return textBefore +
 			markdownTag +
-			this.parseTextInternal( parsingCode.substr( markdownTag.length ), findMarkdownTagRegex, nestingLevel );
+			this.parseTextInternal( parsingCode.slice( markdownTag.length ), findMarkdownTagRegex, nestingLevel );
 	}
 
 	/**

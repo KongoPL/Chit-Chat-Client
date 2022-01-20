@@ -715,7 +715,7 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
         }
       });
 
-      return query.substr(1);
+      return query.slice(1);
     },
 
     val: function (value) {
@@ -1209,7 +1209,7 @@ M.objectSelectorString = function (obj) {
 // Unique Random ID
 M.guid = function () {
   function s4() {
-    return Math.floor((1 + Math.random()) * 0x10000).toString(16).substring(1);
+    return Math.floor((1 + Math.random()) * 0x10000).toString(16).slice(1);
   }
   return function () {
     return s4() + s4() + '-' + s4() + '-' + s4() + '-' + s4() + '-' + s4() + s4() + s4();
@@ -1631,7 +1631,7 @@ $jscomp.polyfill = function (e, r, p, m) {
       if (h.rgb(b)) {
         var f = /rgb\((\d+,\s*[\d]+,\s*[\d]+)\)/g.exec(b);b = f ? "rgba(" + f[1] + ",1)" : b;
       } else b = h.hex(b) ? T(b) : h.hsl(b) ? U(b) : void 0;
-    } else f = (f = y(b)) ? b.substr(0, b.length - f.length) : b, b = c && !/\s/g.test(b) ? f + c : f;b += "";return { original: b, numbers: b.match(d) ? b.match(d).map(Number) : [0], strings: h.str(a) || c ? b.split(d) : [] };
+    } else f = (f = y(b)) ? b.slice(0, b.length - f.length) : b, b = c && !/\s/g.test(b) ? f + c : f;b += "";return { original: b, numbers: b.match(d) ? b.match(d).map(Number) : [0], strings: h.str(a) || c ? b.split(d) : [] };
   }function P(a) {
     a = a ? p(h.arr(a) ? a.map(m) : m(a)) : [];return r(a, function (a, d, b) {
       return b.indexOf(a) === d;
@@ -9295,7 +9295,7 @@ $jscomp.polyfill = function (e, r, p, m) {
           }
         }
 
-        randId = 'datepicker-title-' + Math.random().toString(36).replace(/[^a-z]+/g, '').substr(0, 2);
+        randId = 'datepicker-title-' + Math.random().toString(36).replace(/[^a-z]+/g, '').slice(0, 2);
 
         for (var c = 0; c < 1; c++) {
           this._renderDateDisplay();

@@ -130,7 +130,7 @@ export class ChatMainComponent implements OnInit, OnDestroy, AfterViewInit
 
 	sendMessage()
 	{
-		let messageText = this.typedMessage.substr( 0, this.typedMessage.length - 1 ).trim();
+		let messageText = this.typedMessage.slice( 0, this.typedMessage.length - 1 ).trim();
 
 		if ( messageText.length > 0 )
 		{

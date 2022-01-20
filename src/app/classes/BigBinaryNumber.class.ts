@@ -264,7 +264,7 @@ export default class BigBinaryNumber
 		binaryString = binaryString.padStart( Math.ceil( binaryString.length / 8 ) * 8, '0' );
 
 		for ( let i = 0; i < binaryString.length; i += 8 )
-			string += String.fromCharCode( parseInt( binaryString.substr( i, 8 ), 2 ) );
+			string += String.fromCharCode( parseInt( binaryString.slice( i, 8 ), 2 ) );
 
 		return string;
 	}
