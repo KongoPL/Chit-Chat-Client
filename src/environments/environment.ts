@@ -8,7 +8,8 @@ export const environment = {
 	socketServerAddr: 'http://localhost:4321',
 	peerServer: {
 		host: 'localhost',
-		port: '4322'
+		port: '4322',
+		secure: false,
 	},
 
 	encryption: {

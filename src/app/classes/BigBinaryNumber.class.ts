@@ -263,8 +263,6 @@ export default class BigBinaryNumber
 
 		binaryString = binaryString.padStart( Math.ceil( binaryString.length / 8 ) * 8, '0' );
 
-		console.log("BINARY V", binaryString);
-
 		for ( let i = 0; i < binaryString.length; i += 8 )
 			string += String.fromCharCode( parseInt( binaryString.slice( i, i + 8 ), 2 ) );
 

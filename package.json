@@ -1,10 +1,11 @@
 {
-  "name": "chit-chat-client-new",
+  "name": "chit-chat-client",
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "build:prod": "ng build --base-href=\"/chit-chat-demo/\"",
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },

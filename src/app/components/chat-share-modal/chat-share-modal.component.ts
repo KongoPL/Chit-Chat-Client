@@ -19,6 +19,6 @@ export class ChatShareModalComponent implements OnInit
 
 	public getChatLink()
 	{
-		return window.location.origin + this.router.url;
+		return window.location.href;
 	}
 }

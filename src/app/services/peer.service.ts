@@ -43,6 +43,7 @@ export class PeerService
 		this.peer = new Peer( this.peerId, {
 			host: environment.peerServer.host,
 			port: environment.peerServer.port,
+			secure: environment.peerServer.secure,
 			//debug: 3
 		} );
 

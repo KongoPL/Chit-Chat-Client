@@ -5,8 +5,9 @@ export const environment = {
 
 	socketServerAddr: 'https://chit-chat-server-dsg7.herokuapp.com',
 	peerServer: {
-		host: 'chit-chat-server-dsg7-peer.herokuapp.com',
-		port: '80'
+		host: '0.peerjs.com',
+		port: '443',
+		secure: true,
 	},
 
 	encryption: {
@@ -15,6 +16,6 @@ export const environment = {
 
 	// User configuration:
 	user: {
-		defaultAvatar: '/assets/default-avatar.png'
+		defaultAvatar: '/chit-chat-demo/assets/default-avatar.png'
 	}
 };
