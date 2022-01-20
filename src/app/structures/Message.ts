@@ -3,22 +3,22 @@ export class Message
 	/**
 	 * ID of user that created message
 	 */
-	public userId: string;
+	public userId?: string;
 
 	/**
 	 * User name
 	 */
-	public author: string;
+	public author?: string;
 
 	/**
 	 * User avatar
 	 */
-	public avatar: string;
+	public avatar?: string;
 
 	/**
 	 * Message
 	 */
-	public message: string;
+	public message?: string;
 
 	constructor( userId?: string, author?: string, avatar?: string, message?: string )
 	{

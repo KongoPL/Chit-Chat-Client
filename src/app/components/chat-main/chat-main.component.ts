@@ -1,11 +1,11 @@
-import { Component, OnInit, OnDestroy, ViewChild } from '@angular/core';
+import { Component, OnInit, OnDestroy, ViewChild, ElementRef, AfterViewInit } from '@angular/core';
 import { ChatService } from 'src/app/services/chat.service';
 import { ActivatedRoute  } from '@angular/router';
 import { Message } from 'src/app/structures/Message';
 import { UserService } from 'src/app/services/user.service';
 import { User } from 'src/app/structures/User';
 import { PeerService } from 'src/app/services/peer.service';
-import { Event, Scroll } from '@angular/router/src/events';
+// import { Event, Scroll } from '@angular/router/src/events';
 import { MaterializeService } from 'src/app/services/materialize.service';
 import { Router } from '@angular/router';
 import { environment } from 'src/environments/environment';
@@ -17,12 +17,12 @@ import { SystemMessage } from 'src/app/structures/SystemMessage';
 	templateUrl: './chat-main.component.html',
 	styleUrls: ['./chat-main.component.scss']
 } )
-export class ChatMainComponent implements OnInit, OnDestroy
+export class ChatMainComponent implements OnInit, OnDestroy, AfterViewInit
 {
 	/**
 	 * Message typed by user
 	 */
-	public typedMessage: string;
+	public typedMessage: string = '';
 
 	/**
 	 * List of messages, sended by all users
@@ -43,17 +43,17 @@ export class ChatMainComponent implements OnInit, OnDestroy
 	 * List of profiles.
 	 * Key is user ID, value is User profile
 	 */
-	private profiles: any = {};
+	private profiles: {[key: string]: User} = {};
 
 	/**
 	 * Contains organized messages, used to display
 	 */
-	private _organizedMessages = new Array<Array<Message>>();
+	public organizedMessages = new Array<Array<Message>>();
 
 	/**
 	 * Users that we should display as online, on chat
 	 */
-	private _usersOnlineToDisplay: any = [];
+	public usersOnlineToDisplay: any = [];
 
 	/**
 	 * List of users that are incoming to chat, but we haven't all data about them yet
@@ -78,10 +78,10 @@ export class ChatMainComponent implements OnInit, OnDestroy
 	/**
 	 * Just environment variable reference
 	 */
-	private environment: any;
+	public environment: any;
 
-	@ViewChild( 'messageTextarea' ) messageTextarea;
-	@ViewChild( 'messagesWindow' ) messagesWindow;
+	@ViewChild( 'messageTextarea' ) messageTextarea!: ElementRef<HTMLElement>;
+	@ViewChild( 'messagesWindow' ) messagesWindow!: ElementRef<HTMLElement>;
 
 
 	constructor( private chatService: ChatService,
@@ -95,8 +95,6 @@ export class ChatMainComponent implements OnInit, OnDestroy
 	ngOnInit()
 	{
 		this.environment = environment;
-
-		this.bindStartupEvents();
 
 		let subscribtion = this.route.params.subscribe( ( params ) =>
 		{
@@ -116,6 +114,11 @@ export class ChatMainComponent implements OnInit, OnDestroy
 		{
 			this.appendMessage( new SystemMessage( 'Joined successfully!' ) );
 		} );
+	}
+
+	ngAfterViewInit()
+	{
+		this.bindStartupEvents();
 	}
 
 	ngOnDestroy()
@@ -158,10 +161,10 @@ export class ChatMainComponent implements OnInit, OnDestroy
 
 	private organizeMessages()
 	{
-		this._organizedMessages = [];
+		this.organizedMessages = [];
 
-		let lastId = '',
-			lastName = '',
+		let lastId : string | undefined = '',
+			lastName : string | undefined = '',
 			key = -1;
 
 		for ( let c in this.messages )
@@ -174,20 +177,20 @@ export class ChatMainComponent implements OnInit, OnDestroy
 				lastName = message.author;
 				key++;
 
-				this._organizedMessages[key] = [];
+				this.organizedMessages[key] = [];
 			}
 
-			this._organizedMessages[key].push( message );
+			this.organizedMessages[key].push( message );
 		}
 	}
 
 	private organizeProfilesToDisplay()
 	{
-		this._usersOnlineToDisplay = [];
+		this.usersOnlineToDisplay = [];
 
 		for ( let peerId in this.profiles )
 		{
-			this._usersOnlineToDisplay.push( {
+			this.usersOnlineToDisplay.push( {
 				isMyProfile: peerId == this.peerService.getId(),
 				profile: this.profiles[peerId]
 			} );
@@ -221,22 +224,22 @@ export class ChatMainComponent implements OnInit, OnDestroy
 
 
 		// checkin whether chat is scrolled at bottom or not:
-		let lastScrollPosition = this.messagesWindow.nativeElement.scrollTop;
-			
+		const messagesWindowEl = this.messagesWindow.nativeElement;
+		let lastScrollPosition = messagesWindowEl.scrollTop;
 
-		this.messagesWindow.nativeElement.addEventListener( 'scroll', ( e: any ) =>
+		messagesWindowEl.addEventListener( 'scroll', ( e: any ) =>
 		{
-			let scrollDelta = ( this.messagesWindow.nativeElement.scrollTop - lastScrollPosition );
+			let scrollDelta = ( messagesWindowEl.scrollTop - lastScrollPosition );
 
-			if ( this.messagesWindow.nativeElement.scrollTopMax > 0 )
+			if ( messagesWindowEl.scrollTop > 0 )
 			{
 				if ( scrollDelta < 0 )
 					this.isChatWindowScrolledToBottom = false; // Scrolls to top
-				else if ( this.messagesWindow.nativeElement.scrollTop == this.messagesWindow.nativeElement.scrollTopMax ) // reached bottom
+				else if ( messagesWindowEl.scrollHeight - Math.abs(messagesWindowEl.scrollTop) === messagesWindowEl.clientHeight ) // reached bottom
 					this.isChatWindowScrolledToBottom = true;
 			}
 
-			lastScrollPosition = this.messagesWindow.nativeElement.scrollTop;
+			lastScrollPosition = messagesWindowEl.scrollTop;
 		} );
 
 
@@ -280,11 +283,10 @@ export class ChatMainComponent implements OnInit, OnDestroy
 				this._incomingUsers.push( ...usersJoined );
 			}
 
-			this.users = [];
-			this.users.push( ...users ); // To lose reference
+			this.users = [...users]; // To lose reference
 
 			// Also, throw unused profiles:
-			let profiles = [];
+			let profiles: {[key: string]: User} = {};
 
 			for ( let user of users )
 				if ( this.profiles[user] )
@@ -304,7 +306,7 @@ export class ChatMainComponent implements OnInit, OnDestroy
 			{
 				let profile = this.getProfile( data.userId );
 
-				this.appendMessage( new SystemMessage( profile.name + ' joined...' ) );
+				this.appendMessage( new SystemMessage( profile!.name + ' joined...' ) );
 
 				this._incomingUsers = this._incomingUsers.filter( ( v ) => ( v !== data.userId ) );
 			}
@@ -329,7 +331,13 @@ export class ChatMainComponent implements OnInit, OnDestroy
 	{
 		setTimeout( () =>
 		{
-			this.messagesWindow.nativeElement.scrollTop = this.messagesWindow.nativeElement.scrollTopMax;
+			this.messagesWindow.nativeElement.scrollTop = this.messagesWindow.nativeElement.scrollHeight;
 		}, 0 );
+	}
+
+	
+	public setDefaultAvatar($event: ErrorEvent)
+	{
+		($event.target as HTMLImageElement).src = environment.user.defaultAvatar;
 	}
 }

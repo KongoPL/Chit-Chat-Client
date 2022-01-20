@@ -39,7 +39,7 @@ export class ChatService
 	 * Channel object to which we are currently connected to.
 	 * If NULL or undefined, then we aren't connected to any channel
 	 */
-	private channel: Channel;
+	private channel?: Channel | null;
 
 	/**
 	 * List of users profiles that we have.
@@ -63,10 +63,15 @@ export class ChatService
 		this.serverService.onOwnerChange.subscribe( this._onOwnerChange.bind( this ) );
 
 		// Peer listeners:
+		// @ts-ignore
 		this.peerService.on( 'message', this._onMessage.bind( this ) );
+		// @ts-ignore
 		this.peerService.on( 'getEncryptionKey', this._onGetEncryptionKey.bind( this ) );
+		// @ts-ignore
 		this.peerService.on( 'setEncryptionKey', this._onSetEncryptionKey.bind( this ) );
+		// @ts-ignore
 		this.peerService.on( 'requestProfile', this._onRequestProfile.bind( this ) );
+		// @ts-ignore
 		this.peerService.on( 'setProfile', this._onSetProfile.bind( this ) );
 
 		this.peerService.onDisconnect.subscribe( this._onDisconnect.bind( this ) );
@@ -79,9 +84,9 @@ export class ChatService
 	 */
 	join( channelId: string, callback?: ( success: boolean ) => void )
 	{
-		this.serverService.joinChannel( channelId, ( channel: Channel, success: boolean ) =>
+		this.serverService.joinChannel( channelId, ( channel?: Channel | null, success?: boolean ) =>
 		{
-			if ( success )
+			if ( channel && success )
 			{
 				// Set current channel:
 				this.setChannel( channel );
@@ -93,9 +98,14 @@ export class ChatService
 				// Claim that room state changed (new people joined)
 				this.onRoomStateChange.emit( channel.users );
 
+				const userId = this.serverService.getId();
+				
+				if(!userId)
+					return;
+
 				// Also send our profile to ourselves, to be displayed:
 				this.onReceiveProfile.emit( {
-					userId: this.serverService.getId(),
+					userId: userId,
 					profile: this.userService.getProfile()
 				} );
 
@@ -139,6 +149,9 @@ export class ChatService
 	 */
 	requestProfile( peerId?: string )
 	{
+		if(!this.channel)
+			return;
+
 		let peersToCheck = ( typeof peerId == 'string' ? [peerId] : this.channel.users );
 		let isConnectedToEveryone = this.channel.users.every( ( id: string ) => { return this.peerService.isConnectedTo( id ); } );
 
@@ -159,6 +172,9 @@ export class ChatService
 	 */
 	sendProfile( peerId?: string )
 	{
+		if(!this.channel)
+			return;
+
 		let peersToCheck = ( typeof peerId == 'string' ? [peerId] : this.channel.users );
 		let isConnectedToPeers = this.channel.users.every( ( id: string ) => { return this.peerService.isConnectedTo( id ); } );
 
@@ -178,7 +194,7 @@ export class ChatService
 	 */
 	isOwner(): boolean
 	{
-		return ( this.channel.owner == this.peerService.getId() );
+		return ( !!this.channel && this.channel.owner == this.peerService.getId() );
 	}
 
 	/**
@@ -213,6 +229,9 @@ export class ChatService
 	 */
 	private requestEncryptionKey()
 	{
+		if(!this.channel)
+			return;
+
 		// If we are owner of the channel, then generate it.
 		if ( this.isOwner() )
 		{
@@ -228,7 +247,7 @@ export class ChatService
 			{
 				let subscribtion = this.peerService.onConnect.subscribe( ( peerId ) =>
 				{
-					if ( peerId == this.channel.owner )
+					if ( this.channel && peerId == this.channel.owner )
 					{
 						this.requestEncryptionKey();
 
@@ -277,7 +296,7 @@ export class ChatService
 	 */
 	private _onMessage( author: string, message: string )
 	{
-		let profile: User;
+		let profile: User | null;
 
 		if ( profile = this.getProfile( author ) )
 		{
@@ -291,8 +310,11 @@ export class ChatService
 	 * Method called when someone requested encryption key from us
 	 * @param peerId	User ID
 	 */
-	private _onGetEncryptionKey( peerId )
+	private _onGetEncryptionKey( peerId: string )
 	{
+		if(!this.channel)
+			return;
+
 		this.peerService.sendUnencoded( peerId, 'setEncryptionKey', this.channel.encryptionKey );
 	}
 
@@ -304,7 +326,7 @@ export class ChatService
 	private _onSetEncryptionKey( author: string, key: string )
 	{
 		// Allow to set only if comes from channel owner:
-		if ( author == this.channel.owner )
+		if ( this.channel && author == this.channel.owner )
 		{
 			this.channel.encryptionKey = key;
 			this.encryptionService.setGlobalKey( key );
@@ -341,6 +363,9 @@ export class ChatService
 	 */
 	private _onDisconnect( peerId: string )
 	{
+		if(!this.channel)
+			return;
+
 		this.channel.users = this.channel.users.filter( id => ( id != peerId ) );
 
 		this.onRoomStateChange.emit( this.channel.users );
@@ -352,6 +377,9 @@ export class ChatService
 	 */
 	private _onConnection( peerId: string )
 	{
+		if(!this.channel)
+			return;
+
 		if ( !this.channel.users.includes( peerId ) )
 			this.channel.users.push( peerId );
 

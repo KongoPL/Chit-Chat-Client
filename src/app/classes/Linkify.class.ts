@@ -50,7 +50,7 @@ export default class Linkify
 
 			processedText += text.substr( 0, linkMatches.index ) + this.parser( link );
 
-			text = text.substr( linkMatches.index + link.length );
+			text = text.substr( (linkMatches.index ?? 0) + link.length );
 		}
 
 		processedText += text;

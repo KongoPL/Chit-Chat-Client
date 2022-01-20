@@ -19,7 +19,7 @@ export class Channel
 	/**
 	 * Encyrption key used in chat
 	 */
-	public encryptionKey: string;
+	public encryptionKey: string = '';
 
 	constructor( id: string = '', owner: string = '', users: string[] = [] )
 	{
@@ -36,6 +36,7 @@ export class Channel
 	fromChannel( data: any ): Channel
 	{
 		for ( let c in data )
+			// @ts-ignore
 			this[c] = data[c];
 
 		return this;

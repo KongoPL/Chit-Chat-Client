@@ -9,14 +9,14 @@ export class MaterializeService
 {
 	constructor()
 	{
-		let waitingTimeout = null;
+		let waitingTimeout: number | null = null;
 
-		var observer = new MutationObserver( ( mutationsList, observer ) =>
+		var observer = new MutationObserver( () =>
 		{
 			if ( waitingTimeout !== null )
 				clearTimeout( waitingTimeout );
 
-			waitingTimeout = setTimeout( () => {
+			waitingTimeout = window.setTimeout( () => {
 				this.initializeMaterialize();
 
 				waitingTimeout = null;
@@ -179,8 +179,10 @@ export class MaterializeService
 		{
 			var plugin = M[pluginName];
 
+			// @ts-ignore
 			plugin.init( registry[pluginName] );
 
+			// @ts-ignore
 			registry[pluginName].forEach( function ( obj )
 			{
 				obj.className += ' no-autoinit';

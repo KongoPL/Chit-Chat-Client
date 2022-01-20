@@ -20,7 +20,12 @@ export class AppComponent
 	{
 		this.serverService.onConnection( () =>
 		{
-			this.peerService.init( this.serverService.getId() );
+			const userId = this.serverService.getId();
+
+			if(!userId)
+				return;
+
+			this.peerService.init( userId );
 		} );
 	}
 

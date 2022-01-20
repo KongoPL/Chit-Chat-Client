@@ -42,7 +42,7 @@ export class ServerService
 	 */
 	private socket: SocketIO.Socket;
 
-	private clientId: string;
+	private clientId?: string;
 
 
 	constructor( private peerService: PeerService )
@@ -92,7 +92,7 @@ export class ServerService
 	 * @param channelId	ID of channel that we want to join
 	 * @param onJoin	Callback called when we joined to channel
 	 */
-	joinChannel( channelId: string | Channel, onJoin: ( channel: Channel, success?: boolean ) => void )
+	joinChannel( channelId: string | Channel, onJoin: ( channel?: Channel | null, success?: boolean ) => void )
 	{
 		if ( channelId instanceof Channel )
 			channelId = channelId.id;
@@ -139,7 +139,7 @@ export class ServerService
 	/**
 	 * Returns client ID
 	 */
-	getId(): string
+	getId(): string | undefined
 	{
 		return this.clientId;
 	}

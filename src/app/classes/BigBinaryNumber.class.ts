@@ -36,7 +36,7 @@ export default class BigBinaryNumber
 	 */
 	static fromHex( hex: string ): BigBinaryNumber
 	{
-		let hexChars = {
+		let hexChars: {[key: string]: string} = {
 			0: '0000',
 			1: '0001',
 			2: '0010',

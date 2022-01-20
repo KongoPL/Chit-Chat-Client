@@ -31,6 +31,7 @@ export class UserService
 	setSettings( settings: any )
 	{
 		for ( let c in settings )
+			// @ts-ignore
 			this.data[c] = settings[c];
 
 		this.saveProfile();
@@ -103,7 +104,7 @@ export class UserService
 			canvas.width = 45;
 			canvas.height = 45;
 
-			canvas.getContext( '2d' ).drawImage( image, 0, 0, canvas.width, canvas.height );
+			canvas.getContext( '2d' )?.drawImage( image, 0, 0, canvas.width, canvas.height );
 
 			let newAvatar = canvas.toDataURL();
 

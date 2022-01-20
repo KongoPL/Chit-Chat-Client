@@ -1,10 +1,10 @@
 <div class="chat">
 	<div class="messages-window" #messagesWindow>
-		<div *ngFor="let messageBlock of _organizedMessages" class="message-block">
-			<img *ngIf="messageBlock[0].hasAvatar()" src="{{messageBlock[0].avatar}}" class="avatar" (error)="this.src = environment.user.defaultAvatar;" />
+		<div *ngFor="let messageBlock of organizedMessages" class="message-block">
+			<img *ngIf="messageBlock[0].hasAvatar()" src="{{messageBlock[0].avatar}}" class="avatar" (error)="setDefaultAvatar($event)" />
 			<div class="content">
 				<b>{{messageBlock[0].author}}</b><br />
-				<div *ngFor="let message of messageBlock" class="message" [innerHTML]="message.message | chatMessage"></div>
+				<div *ngFor="let message of messageBlock" class="message" [innerHTML]="(message.message ?? '') | chatMessage"></div>
 			</div>
 		</div>
 	</div>
@@ -18,14 +18,14 @@
 </div>
 <h3>Users online:</h3>
 <div class="users-list">
-	<div *ngFor="let data of this._usersOnlineToDisplay" class="user">
+	<div *ngFor="let data of this.usersOnlineToDisplay" class="user">
 		<!-- Can't make it via "bypassSecurityTrustHtml" because of infinite loop when this method is used -->
 		<b *ngIf="data.isMyProfile else otherUser">
-			<img src="{{data.profile.avatar}}" (error)="this.src = environment.user.defaultAvatar" />
+			<img src="{{data.profile.avatar}}" (error)="setDefaultAvatar($event)" />
 			{{data.profile.name}}
 		</b>
 		<ng-template #otherUser>
-			<img src="{{data.profile.avatar}}" (error)="this.src = environment.user.defaultAvatar" />
+			<img src="{{data.profile.avatar}}" (error)="setDefaultAvatar($event)" />
 			{{data.profile.name}}
 		</ng-template>
 	</div>

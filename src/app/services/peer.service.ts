@@ -1,11 +1,12 @@
-declare var Peer;
+declare var Peer: any;
 declare class DataConnection
 {
 	peer: string;
 	open: boolean;
 
-	on( eventName: string, callback: ( data: any ) => void );
-	close();
+	on: ( eventName: string, callback: ( data: any ) => void ) => void;
+	close: () => void;
+	send: (data: any) => void;
 };
 
 import { Injectable, EventEmitter } from '@angular/core';
@@ -21,15 +22,14 @@ export class PeerService
 	public onConnect = new EventEmitter<string>();
 
 	private peer: any; // Peer
-	private peerId: string;
+	private peerId: string = '';
 	private isConnected: boolean = false;
 
-	private connectedPeers: DataConnection[];
+	private connectedPeers: {[key: string]: DataConnection} = {};
 	private listeners: any = {};
 
 	constructor( private encryptionService: EncryptionService )
 	{
-		this.connectedPeers = [];
 	}
 
 	/**
@@ -51,7 +51,7 @@ export class PeerService
 			this.isConnected = true;
 		} );
 
-		this.peer.on( 'connection', ( connection ) => // Called when someone connects to us
+		this.peer.on( 'connection', ( connection: DataConnection ) => // Called when someone connects to us
 		{
 			this.setupPeerConnection( connection );
 		} );
@@ -213,8 +213,6 @@ export class PeerService
 
 			if ( isEncoded )
 				request = this.encryptionService.decode( request );
-
-			//console.log( 'inc', request );
 
 			if ( typeof request == 'object' )
 			{

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { UserService } from 'src/app/services/user.service';
 import { MaterializeService } from 'src/app/services/materialize.service';
 import { environment } from 'src/environments/environment';
@@ -10,10 +10,10 @@ import { environment } from 'src/environments/environment';
 } )
 export class UserProfileManageComponent implements OnInit
 {
-	private name: string;
-	private avatar: string;
+	public name: string = '';
+	public avatar: string = '';
 
-	@ViewChild( 'avatarInput' ) avatarInput;
+	@ViewChild( 'avatarInput' ) avatarInput!: ElementRef<HTMLInputElement>;
 
 
 	constructor(
@@ -29,8 +29,8 @@ export class UserProfileManageComponent implements OnInit
 
 	loadSettings()
 	{
-		this.name = this.userService.name;
-		this.avatar = this.userService.avatar;
+		this.name = this.userService.name ?? '';
+		this.avatar = this.userService.avatar ?? '';
 	}
 
 
@@ -47,7 +47,7 @@ export class UserProfileManageComponent implements OnInit
 	{
 		let files = this.avatarInput.nativeElement.files;
 
-		if ( files.length == 1 )
+		if ( files && files.length == 1 )
 		{
 			let file = files[0];
 

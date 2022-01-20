@@ -35,7 +35,7 @@ Chit Chat is server-less chat with solutions that has been created to give you m
 3. Markdown formatting
 
 ## Contact
-* Email: **kongocode@gmail.com**
+* Email: **contact@happy-lynx.com**
 
 # Screenshots
 ![Main page](/screenshots/screenshot-1.jpg?raw=true "Main page")

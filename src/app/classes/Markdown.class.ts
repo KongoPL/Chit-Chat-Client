@@ -59,7 +59,7 @@ export default class MarkDownParser
 	 * @param findMarkdownTagRegex	Regex for finding markdown tag (cause it's little expensive to get it each time via method)
 	 * @param nestingLevel			Current nesting level (to prevent recursion loop)
 	 */
-	private parseTextInternal( text: string, findMarkdownTagRegex: RegExp, nestingLevel: number = 0 )
+	private parseTextInternal( text: string, findMarkdownTagRegex: RegExp, nestingLevel: number = 0 ): string
 	{
 		let matches = text.match( findMarkdownTagRegex ); // Matches if text contains any of regex tags (no matter whether closed or not)
 
@@ -74,37 +74,43 @@ export default class MarkDownParser
 			markdownTagConfig = this.getMarkdownTag( markdownTag ),
 			markdownHtmlTags = this.getHtmlTagsForMarkdownTag( markdownTag );
 
-		// If is standalone tag, then it doesn't need to be closed:
-		if ( markdownTagConfig.standalone )
-		{
-			return textBefore +
-				markdownHtmlTags[0] +
-				markdownHtmlTags[1] +
-				this.parseTextInternal( parsingCode.substr( markdownTag.length ), findMarkdownTagRegex, nestingLevel );
-		}
-		else
-		{
-			//Find closing tag:
-			let closingTagFindRegex = new RegExp( markdownTagRegex + '(.*?)' + markdownTagRegex + '(.*?$)' );
-			let textToParseMatch = parsingCode.match( closingTagFindRegex );
-
-			if ( textToParseMatch ) // Has closing tag
+		if(markdownTagConfig && markdownHtmlTags) {
+			// If is standalone tag, then it doesn't need to be closed:
+			if ( markdownTagConfig.standalone )
 			{
-				let textBetweenMarkdownTags = textToParseMatch[1];
+				return textBefore +
+					markdownHtmlTags[0] +
+					markdownHtmlTags[1] +
+					this.parseTextInternal( parsingCode.substr( markdownTag.length ), findMarkdownTagRegex, nestingLevel );
+			}
+			else
+			{
+				//Find closing tag:
+				let closingTagFindRegex = new RegExp( markdownTagRegex + '(.*?)' + markdownTagRegex + '(.*?$)' );
+				let textToParseMatch = parsingCode.match( closingTagFindRegex );
 
-				// If text between tags has multiple lines and tag is not multiline, then don't parse
-				if ( markdownTagConfig.multiLine == false && !textBetweenMarkdownTags.match( /\\n/ )
-					|| markdownTagConfig.multiLine == true )
+				if ( textToParseMatch ) // Has closing tag
 				{
-					// Parse tags within text beetween markdown tags, if it's allowed:
-					if ( markdownTagConfig.allowTagsWithin )
-						textBetweenMarkdownTags = this.parseTextInternal( textBetweenMarkdownTags, findMarkdownTagRegex, nestingLevel + 1 );
+					let textBetweenMarkdownTags = textToParseMatch[1];
 
-					return textBefore +																		// Text before markdown tag
-						markdownHtmlTags[0] +																// Replaced opening markdown tag
-						textBetweenMarkdownTags +															// Text between markdown tags
-						markdownHtmlTags[1] +																// Replaced closing markdown tag
-						this.parseTextInternal( textToParseMatch[2], findMarkdownTagRegex, nestingLevel );	// Text after markdown tags to be parsed
+					// If text between tags has multiple lines and tag is not multiline, then don't parse
+					if ( markdownTagConfig.multiLine == false && !textBetweenMarkdownTags.match( /\\n/ )
+						|| markdownTagConfig.multiLine == true )
+					{
+						// Parse tags within text beetween markdown tags, if it's allowed:
+						if ( markdownTagConfig.allowTagsWithin )
+							textBetweenMarkdownTags = this.parseTextInternal( textBetweenMarkdownTags, findMarkdownTagRegex, nestingLevel + 1 );
+
+						return textBefore +				// Text before markdown tag
+							markdownHtmlTags[0] +		// Replaced opening markdown tag
+							textBetweenMarkdownTags +	// Text between markdown tags
+							markdownHtmlTags[1] +		// Replaced closing markdown tag
+							this.parseTextInternal(		// Text after markdown tags to be parsed
+								textToParseMatch[2], 
+								findMarkdownTagRegex, 
+								nestingLevel 
+							);
+					}
 				}
 			}
 		}
@@ -142,11 +148,12 @@ export default class MarkDownParser
 	 * @param markdownTag	Markdown tag
 	 * @returns {string[]|null}	Array where 0 is opening tag and 1 is closing tag or null, if unable to find.
 	 */
-	private getHtmlTagsForMarkdownTag( markdownTag ): string[] | null
+	private getHtmlTagsForMarkdownTag( markdownTag: string ): string[] | null
 	{
 		for ( let key in this.tags )
 		{
-			let tag = this.tags[key];
+			// @ts-ignore
+			let tag: MarkdownTag = this.tags[key];
 
 			if ( tag.tag == markdownTag
 				|| Array.isArray( tag.tag ) && tag.tag.some( ( v ) => v == markdownTag ) )
@@ -161,14 +168,15 @@ export default class MarkDownParser
 	 * @param markdownTag	Markdown tag (**, -- or something else)
 	 * @return {MarkdownTag|null} MarkdownTag or null if unable to find
 	 */
-	private getMarkdownTag( markdownTag ): MarkdownTag | null
+	private getMarkdownTag( markdownTag: string ): MarkdownTag | null
 	{
 		for ( let key in this.tags )
 		{
+			// @ts-ignore
 			let tag = this.tags[key];
 
 			if ( tag.tag == markdownTag
-				|| Array.isArray( tag.tag ) && tag.tag.some( ( v ) => v == markdownTag ) )
+				|| Array.isArray( tag.tag ) && tag.tag.some( ( v: string ) => v == markdownTag ) )
 				return tag;
 		}
 
@@ -204,6 +212,7 @@ export default class MarkDownParser
 
 		for ( let key in this.tags )
 		{
+			// @ts-ignore
 			let tagConfig = this.tags[key];
 
 			if ( tagConfig.enabled )
@@ -307,15 +316,15 @@ export default class MarkDownParser
 	}
 }
 
-export class MarkdownTag
+export class MarkdownTag implements TMarkdownTagConfig
 {
-	public tag: string;
+	public tag: string | string[] = '';
 
 	/**
 	 * HTML tag related with markdown tag.
 	 * Examples: b, i, u, hr, a
 	 */
-	public htmlTag: string;
+	public htmlTag: string = '';
 
 	/**
 	 * HTML Attributes added to tag. Consists of arrays where 0 is attribute name and 1 is value
@@ -347,10 +356,10 @@ export class MarkdownTag
 	 * @param tag		Markdown tag or configuration
 	 * @param htmlTag	HTML tag related with markdown tag if first param isn't configuration
 	 */
-	constructor( tag: string | any, htmlTag?: string )
+	constructor( tag: string | string[] | TMarkdownTagConfig, htmlTag?: string )
 	{
-		if ( arguments.length === 1 && typeof arguments[0] == 'object' )
-			this.loadConfig( arguments[0] );
+		if ( typeof tag == 'object' && !Array.isArray(tag) )
+			this.loadConfig( tag );
 		else
 			this.loadConfig( {
 				tag: tag,
@@ -362,9 +371,10 @@ export class MarkdownTag
 	 * Loads config of tag
 	 * @param config	Input config
 	 */
-	loadConfig( config: { enabled?: boolean, tag?: string, htmlTag?: string, htmlAttrs?: Array<Array<string>>, multiLine?: boolean, standalone?: boolean, allowTagsWithin?: boolean } )
+	loadConfig( config: TMarkdownTagConfig )
 	{
 		for ( let key in config )
+			// @ts-ignore
 			this[key] = config[key];
 	}
 
@@ -385,3 +395,13 @@ export class MarkdownTag
 		];
 	}
 }
+
+type TMarkdownTagConfig = {
+	enabled?: boolean,
+	tag?: string | string[],
+	htmlTag?: string,
+	htmlAttrs?: Array<Array<string>>,
+	multiLine?: boolean,
+	standalone?: boolean,
+	allowTagsWithin?: boolean
+};
