@@ -189,7 +189,7 @@ export default class BigBinaryNumber
 
 			while ( pointer >= 0 )
 			{
-				operationalBinary.setBinaries( this.binaries.slice( pointer, this.binaries.length ) );
+				operationalBinary.setBinaries( this.binaries.slice( pointer, pointer + this.binaries.length ) );
 
 				let bit = ( operationalBinary.sub( number, true ) === false ? 0 : 1 ),
 					countOfZeros = 0,
@@ -263,8 +263,10 @@ export default class BigBinaryNumber
 
 		binaryString = binaryString.padStart( Math.ceil( binaryString.length / 8 ) * 8, '0' );
 
+		console.log("BINARY V", binaryString);
+
 		for ( let i = 0; i < binaryString.length; i += 8 )
-			string += String.fromCharCode( parseInt( binaryString.slice( i, 8 ), 2 ) );
+			string += String.fromCharCode( parseInt( binaryString.slice( i, i + 8 ), 2 ) );
 
 		return string;
 	}

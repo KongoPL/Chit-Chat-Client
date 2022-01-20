@@ -124,8 +124,8 @@ export class EncryptionService
 
 		while ( cursor < text.length )
 		{
-			let charLength = parseInt( text.slice( cursor, 2 ), 2 ) * 8 + 8;
-			let charCode = parseInt( text.slice( cursor + 2, charLength ), 2 );
+			let charLength = parseInt( text.slice( cursor, cursor + 2 ), 2 ) * 8 + 8;
+			let charCode = parseInt( text.slice( cursor + 2, cursor + 2 + charLength ), 2 );
 
 			returnText += String.fromCharCode( charCode );
 

@@ -3,10 +3,10 @@ export const environment = {
 
 	production: true,
 
-	socketServerAddr: 'http://localhost:4321',
+	socketServerAddr: 'https://chit-chat-server-dsg7.herokuapp.com',
 	peerServer: {
-		host: 'localhost',
-		port: '4322'
+		host: 'chit-chat-server-dsg7-peer.herokuapp.com',
+		port: '80'
 	},
 
 	encryption: {
