@@ -22,7 +22,7 @@
     "@types/socket.io": "^2.1.2",
     "@types/webrtc": "^0.0.24",
     "js-htmlencode": "^0.3.0",
-    "peerjs": "^0.3.18",
+    "peerjs": "^1.4.7",
     "rxjs": "~7.4.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.11.4"
